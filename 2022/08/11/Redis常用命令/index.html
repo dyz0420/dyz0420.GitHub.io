@@ -1,0 +1,593 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>Redis常用命令 | 笙沉のBlog</title><meta name="keywords" content="学习笔记,Redis"><meta name="author" content="笙沉"><meta name="copyright" content="笙沉"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="Redis常用命令"><meta name="application-name" content="Redis常用命令"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="Redis常用命令"><meta property="og:url" content="https://dyzhome.top/2022/08/11/Redis常用命令/index.html"><meta property="og:site_name" content="笙沉のBlog"><meta property="og:description" content="Redis常用命令，以及对其基础数据结构的介绍"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://dyzhome.top/img/default_cover.jpg"><meta property="article:author" content="笙沉"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://dyzhome.top/img/default_cover.jpg"><meta name="description" content="Redis常用命令，以及对其基础数据结构的介绍"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://dyzhome.top/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"><link rel="preconnect" href="//npm.elemecdn.com"/><link rel="preconnect" href="//npm.onmicrosoft.cn"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.20/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: {"enable":true,"leaveTitle":"ヾ(•ω•`)o 跑哪里去了~","backTitle":"( •̀ ω •́ )✧欢迎肥来！"},
+  LA51: undefined,
+  greetingBox: {"enable":true,"default":"晚上好👋","list":[{"greeting":"晚安😴","startTime":0,"endTime":5},{"greeting":"早上好鸭👋, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好👋, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安👋, 宝贝","startTime":12,"endTime":14},{"greeting":"🌈充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧🍔。","startTime":19,"endTime":19},{"greeting":"晚上好👋, 在属于自己的时间好好放松😌~","startTime":20,"endTime":24}]},
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: true,
+  mainTone: undefined,
+  authorStatus: {"skills":["🤖️ 数码科技爱好者","🔍 分享与热心帮助","🏠 智能家居小能手","🔨 设计开发一条龙","🤝 专修交互与设计","🏃 脚踏实地行动派","🧱 团队小组发动机","💢 壮汉人狠话不多"]},
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: true
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: 笙沉","link":"链接: ","source":"来源: 笙沉のBlog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#3b70fc","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '笙沉のBlog',
+  title: 'Redis常用命令',
+  postAI: '',
+  pageFillDescription: '1、Redis基础命令, 1.1、对key操作, 1.2、其他命令, 2、字符串（String）, 2.1、简介, 2.2、常用命令, 2.3、数据结构, 3、列表（List）, 3.1、简介, 3.2、常用命令, 3.3、数据结构, 4、集合（Set）, 4.1、简介, 4.2、常用命令, 4.3、数据结构, 5、哈希（Hash）, 5.1、简介, 5.2、常用命令, 5.3、数据结构, 6、有序集合（Zset）, 6.1、简介, 6.2、常用命令, 6.3、数据结构, 7、配置文件介绍, ① Units单位, ② INCLUDES包含, ③ 网络相关配置, ④ GENERAL通用, ⑤ SECURITY安全, ⑥ LIMITS限制基础命令对操作查看当前库所有的判断某个是否存在查看的类型删除指定的数据根据选择非阻塞删除异步删除给设置过期时间单位秒查看还有多少秒过期表示不过期表示已经过期其他命令切换到号库查看当前数据库的数量清空当前库通杀全部库字符串简介是最基本的类型结构类型是二进制安全的意味着的可以包含任何数据比如图片或者序列化的对象类型是最基本的数据类型一个中字符串最多可以是常用命令添加键值对若已经存在会覆盖值根据取对应值在对应的值后面追加值获取值的长度添加键值对区别于命令只有不存在才能设置成功将中存储的数字值增只能对数字值操作如果为空新增值为将中存储的数字值减只能对数字值操作如果为空新增值为步长将中储存的数字值增减自定义步长同时设置一个或多个键值对同时获取多个键的同时设置一个或多个键值对当且仅当所有给定都不存在起始位置结束位置获得值的范围类似于的起始位置用覆写所储存的字符串值从起始位置开始过期时间设置键值对同时设置过期时间设置新值同时获取旧值数据结构的数据结构为简单动态字符串缩写是可以修改的字符串内部结构实现上类似于的采用预分配冗余空间的方式来减少内存的频繁分配内部为当前字符串实际分配的空间一般要高于实际字符串长度当字符串长度小于时扩容都是加倍现有的空间如果超过扩容时一次只会多扩的空间需要注意的是字符串最大长度为列表简介单键多值结构列表是简单的字符串列表按照插入顺序排序你可以添加一个元素到列表的头部左边或者尾部右边它的底层实际是个双向链表对两端的操作性能很高通过索引下标的操作中间的节点性能会较差常用命令从左边右边插入一个或多个值从左边右边吐出一个值吐出后值就不存在了相当于删除值全都吐出键就会自动删除从列表右边吐出一个值插到列表左边按照索引下标获得元素从左到右例如左边第一个右边第一个也就是获取所有值按照索引下标获得元素从左到右获得列表长度在的后面插入插入值从左边删除个从左到右将列表下标为的值替换成数据结构的数据结构为快速链表首先在列表元素较少的情况下会使用一块连续的内存存储这个结构是也即是压缩列表它将所有的元素紧挨着一起存储分配的是一块连续的内存当数据量比较多的时候才会改成因为普通的链表需要的附加指针空间太大会比较浪费空间比如这个列表里存的只是类型的数据结构上还需要两个额外的指针和将链表和结合起来组成了也就是将多个使用双向指针串起来使用这样既满足了快速的插入删除性能又不会出现太大的空间冗余集合简介对外提供的功能与类似是一个列表的功能特殊之处在于是可以自动排重的当你需要存储一个列表数据又不希望出现重复数据时是一个很好的选择并且提供了判断某个成员是否在一个集合内的重要接口这个也是所不能提供的的是类型的无序集合它底层其实是一个为的表所以添加删除查找的复杂度都是一个算法随着数据的增加执行时间的长短如果是数据增加查找数据的时间不变常用命令将一个或多个元素加入到集合中已经存在的元素将被忽略取出该集合的所有值判断集合是否为含有该值有为没有为返回该集合的元素个数删除集合中的某个元素随机从该集合中吐出删除一个值删完了就不存在了随机从该集合中取出个值不会从集合中删除把集合中一个值移动到另一个集合返回两个集合的交集元素返回两个集合的并集元素返回两个集合的差集元素包含中的元素不包含中的数据结构数据结构是字典字典是用哈希表实现的中的内部实现使用的是只不过所有的都指向同一个对象的结构也是一样它的内部也使用结构所有的都指向同一个内部值哈希简介是一个键值对集合是一个类型的和的映射表特别适合用于存储对象类似里面的常用命令给集合中的键赋值从集合取出批量设置的值查看哈希表中给定域是否存在列出该集合的所有列出该集合的所有为哈希表中的域的值加上增量将哈希表中的域的值设置为当且仅当域不存在数据结构类型对应的数据结构是两种压缩列表哈希表当长度较短且个数较少时使用否则使用有序集合简介有序集合与普通集合非常相似是一个没有重复元素的字符串集合不同之处是有序集合的每个成员都关联了一个评分这个评分被用来按照从最低分到最高分的方式排序集合中的成员集合的成员是唯一的但是评分可以是重复的因为元素是有序的所以你也可以很快的根据评分或者次序来获取一个范围的元素访问有序集合的中间元素也是非常快的因此你能够使用有序集合作为一个没有重复成员的智能列表常用命令将一个或多个元素及其值加入到有序集合当中返回有序集中下标在到之间的元素带可以让分数一起和值返回到结果集返回有序集中所有值介于和之间包括等于或的成员有序集成员按值递增从小到大次序排列同上改为从大到小排列为元素的加上增量删除该集合下指定值的元素统计该集合分数区间内的元素个数返回该值在集合中的排名从开始数据结构是提供的一个非常特别的数据结构一方面它等价于的数据结构可以给每一个元素赋予一个权重另一方面它又类似于内部的元素会按照权重进行排序可以得到每个元素的名次还可以通过的范围来获取元素的列表底层使用了两个数据结构的作用就是关联元素和权重保障元素的唯一性可以通过元素找到相应的值跳跃表跳跃表的目的在于给元素排序根据的范围获取元素列表配置文件介绍配置文件在目录下的单位配置大小单位开头定义了一些基本的度量单位只支持不支持大小写不敏感包含类似中的多实例的情况可以把公用的配置文件提取出来网络相关配置默认情况只能接受本机的访问请求不写的情况下无限制接受任何地址的访问生产环境肯定要写你应用服务器的地址服务器是需要远程访问的所以需要将其注释掉如果开启了那么在没有设定且没有设密码的情况下只允许接受本机的响应将本机访问保护模式设置默认端口号默认是一个连接队列默认值设置的其实是一个连接队列队列总和未完成三次握手队列已经完成三次握手队列在高并发环境下你需要一个高值来避免慢客户端连接问题注意内核会将这个值减小到的值所以需要确认增大和两个值来达到想要的效果一个空闲的客户端维持多少秒会关闭表示关闭该功能即永不关闭对访问客户端的一种心跳检测每个秒检测一次单位为秒如果设置为则不会进行检测建议设置成通用是否为后台进程设置为守护进程后台启动存放文件的位置每个实例会产生一个不同的文件指定日志记录级别总共支持四个级别默认为四个级别根据使用阶段来选择生产环境选择或者日志文件名称设定库的数量默认默认数据库为可以使用命令在连接上指定数据库安全访问密码的查看设置和取消在命令中设置密码只是临时的重启服务器密码就还原了永久设置需要再配置文件中进行设置限制设置同时可以与多少个客户端进行连接默认情况下为个客户端如果达到了此限制则会拒绝新的连接请求并且向这些连接请求方发出以作回应建议必须设置否则将内存占满造成服务器宕机使用算法移除只对设置了过期时间的键最近最少使用在所有集合中使用算法移除在过期集合中移除随机的只对设置了过期时间的键在所有集合中移除随机的移除那些值最小的即那些最近要过期的不进行移除针对写操作只是返回错误信息',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-12-10 21:24:30',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/img/head.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://dyzhome.top" title="博客"><img class="back-menu-item-icon" src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="http://139.224.229.183/" title="微视频"><img class="back-menu-item-icon" src="http://139.224.229.183/favicon.ico" alt="微视频"/><span class="back-menu-item-text">微视频</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">笙沉のBlog</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/categories/"><span> 分类</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/archives/"><span> 归档</span></a></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/AOP/" style="font-size: 1.05rem;">AOP<sup>1</sup></a><a href="/tags/IOC/" style="font-size: 1.05rem;">IOC<sup>1</sup></a><a href="/tags/JVM/" style="font-size: 1.05rem;">JVM<sup>1</sup></a><a href="/tags/Java%E9%AB%98%E7%BA%A7/" style="font-size: 1.05rem;">Java高级<sup>7</sup></a><a href="/tags/Mybatis%E6%A1%86%E6%9E%B6/" style="font-size: 1.05rem;">Mybatis框架<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 1.05rem;">Redis<sup>1</sup></a><a href="/tags/Spring%E6%A1%86%E6%9E%B6/" style="font-size: 1.05rem;">Spring框架<sup>3</sup></a><a href="/tags/%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/" style="font-size: 1.05rem;">声明式事务<sup>1</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 1.05rem;">学习笔记<sup>13</sup></a><a href="/tags/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/" style="font-size: 1.05rem;">实用工具<sup>1</sup></a><a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" style="font-size: 1.05rem;">排序算法<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/03/"><span class="card-archive-list-date">三月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/10/"><span class="card-archive-list-date">十月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/08/"><span class="card-archive-list-date">八月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/02/"><span class="card-archive-list-date">二月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/07/"><span class="card-archive-list-date">七月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">6</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/Redis/" itemprop="url">Redis</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>学习笔记</span></a><a class="article-meta__tags" href="/tags/Redis/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Redis</span></a></span></div></div><h1 class="post-title" itemprop="name headline">Redis常用命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="post-meta-icon anzhiyufont anzhiyu-icon-calendar-days"></i><span class="post-meta-label">发表于</span><time itemprop="dateCreated datePublished" datetime="2022-08-11T04:57:12.000Z" title="发表于 2022-08-11 12:57:12">2022-08-11</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">5k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为南京"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>南京</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/img/default_cover.jpg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://dyzhome.top/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"><header><a class="post-meta-categories" href="/categories/Redis/" itemprop="url">Redis</a><a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" tabindex="-1" itemprop="url">学习笔记</a><a href="/tags/Redis/" tabindex="-1" itemprop="url">Redis</a><h1 id="CrawlerTitle" itemprop="name headline">Redis常用命令</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">笙沉</span><time itemprop="dateCreated datePublished" datetime="2022-08-11T04:57:12.000Z" title="undefined 2022-08-11 12:57:12">2022-08-11</time></header><h1 id="1、Redis基础命令"><a href="#1、Redis基础命令" class="headerlink" title="1、Redis基础命令"></a>1、Redis基础命令</h1><h2 id="1-1、对key操作"><a href="#1-1、对key操作" class="headerlink" title="1.1、对key操作"></a>1.1、对key操作</h2><ul>
+<li><code>keys *</code>： 查看当前库所有的key</li>
+<li><code>exists &lt;key&gt;</code>：判断某个key是否存在</li>
+<li><code>type &lt;key&gt;</code>：查看key的类型</li>
+<li><code>del &lt;key&gt;</code>：删除指定key的数据</li>
+<li><code>unlink &lt;key&gt;</code>：根据value选择非阻塞删除，异步删除</li>
+<li><code>expire &lt;key&gt; 10</code>：给key设置过期时间，单位秒</li>
+<li><code>ttl &lt;key&gt;</code>：查看还有多少秒过期，-1表示不过期，-2表示已经过期</li>
+</ul>
+<h2 id="1-2、其他命令"><a href="#1-2、其他命令" class="headerlink" title="1.2、其他命令"></a>1.2、其他命令</h2><ul>
+<li><code>select 1</code>：切换到1号库</li>
+<li><code>dbsize</code>：查看当前数据库的key数量</li>
+<li><code>flushdb</code>：清空当前库</li>
+<li><code>flushall</code>：通杀全部库</li>
+</ul>
+<h1 id="2、字符串（String）"><a href="#2、字符串（String）" class="headerlink" title="2、字符串（String）"></a>2、字符串（String）</h1><h2 id="2-1、简介"><a href="#2-1、简介" class="headerlink" title="2.1、简介"></a>2.1、简介</h2><ul>
+<li>String是Redis最基本的类型，<strong>key-value结构</strong>。</li>
+<li>String类型是二进制安全的。意味着Redis的string可以包含任何数据。比如jpg图片或者序列化的对象。</li>
+<li>String类型是Redis最基本的数据类型，一个Redis中字符串value最多可以是512M。</li>
+</ul>
+<h2 id="2-2、常用命令"><a href="#2-2、常用命令" class="headerlink" title="2.2、常用命令"></a>2.2、常用命令</h2><ul>
+<li><code>set &lt;key&gt; &lt;value&gt;</code>：添加键值对（若key已经存在，会覆盖值）</li>
+<li><code>get &lt;key&gt;</code>：根据key取对应value值</li>
+<li><code>append &lt;key&gt; &lt;value&gt;</code>：在key对应的值后面追加value值</li>
+<li><code>strlen &lt;key&gt;</code>：获取值的长度</li>
+<li><code>setnx &lt;key&gt; &lt;value&gt;</code>：添加键值对（区别于set命令，只有key不存在才能设置成功）</li>
+<li><code>incr &lt;key&gt;</code>：将key中存储的数字值增1（只能对数字值操作，如果为空，新增值为1）</li>
+<li><code>decr &lt;key&gt;</code>：将key中存储的数字值减1（只能对数字值操作，如果为空，新增值为-1）</li>
+<li><code>incrby/decrby &lt;key&gt; &lt;步长&gt;</code>：将key中储存的数字值增减。自定义步长。</li>
+<li><code>mset &lt;key1&gt; &lt;value1&gt; &lt;key2&gt; &lt;value2&gt; ...</code>：同时设置一个或多个键值对</li>
+<li><code>mget &lt;key1&gt; &lt;key2&gt; ...</code>：同时获取多个键的value</li>
+<li><code>msetnx &lt;key1&gt; &lt;value1&gt; &lt;key2&gt; &lt;value2&gt; ...</code>：同时设置一个或多个键值对，当且仅当所有给定 key 都不存在。</li>
+<li><code>getrange &lt;key&gt; &lt;起始位置&gt; &lt;结束位置&gt;</code>：获得值的范围，类似于Java的substring。</li>
+<li><code>setrange &lt;key&gt; &lt;起始位置&gt; &lt;value&gt;</code>：用value覆写key所储存的字符串值，从起始位置开始</li>
+<li><code>setex &lt;key&gt; &lt;过期时间&gt; &lt;value&gt;</code>：设置键值对，同时设置过期时间</li>
+<li><code>getset &lt;key&gt; &lt;value&gt;</code> ：设置新值，同时获取旧值</li>
+</ul>
+<h2 id="2-3、数据结构"><a href="#2-3、数据结构" class="headerlink" title="2.3、数据结构"></a>2.3、数据结构</h2><ul>
+<li>String的数据结构为简单动态字符串(Simple Dynamic String,缩写SDS)。是可以修改的字符串，内部结构实现上类似于Java的ArrayList，采用预分配冗余空间的方式来减少内存的频繁分配。</li>
+<li>内部为当前字符串实际分配的空间一般要高于实际字符串长度。当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容时一次只会多扩1M的空间。需要注意的是字符串最大长度为512M。</li>
+</ul>
+<h1 id="3、列表（List）"><a href="#3、列表（List）" class="headerlink" title="3、列表（List）"></a>3、列表（List）</h1><h2 id="3-1、简介"><a href="#3-1、简介" class="headerlink" title="3.1、简介"></a>3.1、简介</h2><ul>
+<li><strong>单键多值</strong>结构</li>
+<li>Redis 列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）。</li>
+<li>它的底层实际是个<strong>双向链表</strong>，对两端的操作性能很高，通过索引下标的操作中间的节点性能会较差。</li>
+</ul>
+<h2 id="3-2、常用命令"><a href="#3-2、常用命令" class="headerlink" title="3.2、常用命令"></a>3.2、常用命令</h2><ul>
+<li><code>lpush/rpush &lt;key&gt; &lt;value1&gt; &lt;value2&gt; &lt;value3&gt; ...</code>：从左边&#x2F;右边插入一个或多个值。</li>
+<li><code>lpop/rpop &lt;key&gt;</code>：从左边&#x2F;右边吐出一个值。<strong>吐出后值就不存在了，相当于删除，值全都吐出，键就会自动删除</strong>。</li>
+<li><code>rpoplpush &lt;key1&gt;&lt;key2&gt;</code>：从key1列表右边吐出一个值，插到key2列表左边。</li>
+<li><code>lrange &lt;key&gt; &lt;start&gt; &lt;stop&gt;</code>：按照索引下标获得元素(从左到右)，例如<code>lrange mylist 0 -1</code>：0左边第一个，-1右边第一个，也就是获取所有值</li>
+<li><code>lindex &lt;key&gt; &lt;index&gt;</code>：按照索引下标获得元素(从左到右)</li>
+<li><code>llen &lt;key&gt;</code>：获得列表长度</li>
+<li><code>linsert &lt;key&gt; before &lt;value&gt; &lt;newvalue&gt;</code>：在value的后面插入newvalue插入值</li>
+<li><code>lrem &lt;key&gt; &lt;n&gt; &lt;value&gt;</code>：从左边删除n个value(从左到右)</li>
+<li><code>lset &lt;key&gt; &lt;index&gt; &lt;value&gt;</code>：将列表key下标为index的值替换成value</li>
+</ul>
+<h2 id="3-3、数据结构"><a href="#3-3、数据结构" class="headerlink" title="3.3、数据结构"></a>3.3、数据结构</h2><ul>
+<li><p>List的数据结构为快速链表quickList。</p>
+</li>
+<li><p>首先在列表元素较少的情况下会使用一块连续的内存存储，这个结构是ziplist，也即是压缩列表。它将所有的元素紧挨着一起存储，分配的是一块连续的内存。当数据量比较多的时候才会改成quicklist。</p>
+</li>
+<li><p>因为普通的链表需要的附加指针空间太大，会比较浪费空间。比如这个列表里存的只是int类型的数据，结构上还需要两个额外的指针prev和next。</p>
+</li>
+<li><p>Redis将链表和ziplist结合起来组成了quicklist。也就是将多个ziplist使用双向指针串起来使用。这样既满足了快速的插入删除性能，又不会出现太大的空间冗余。</p>
+</li>
+</ul>
+<h1 id="4、集合（Set）"><a href="#4、集合（Set）" class="headerlink" title="4、集合（Set）"></a>4、集合（Set）</h1><h2 id="4-1、简介"><a href="#4-1、简介" class="headerlink" title="4.1、简介"></a>4.1、简介</h2><ul>
+<li>Redis set对外提供的功能与list类似是一个列表的功能，特殊之处在于set是可以<strong>自动排重</strong>的，当你需要存储一个列表数据，又不希望出现重复数据时，set是一个很好的选择，并且set提供了判断某个成员是否在一个set集合内的重要接口，这个也是list所不能提供的。</li>
+<li>Redis的Set是string类型的<strong>无序集合。它底层其实是一个value为null的hash表</strong>，所以添加，删除，查找的**复杂度都是O(1)**。</li>
+<li>一个算法，随着数据的增加，执行时间的长短，如果是O(1)，数据增加，查找数据的时间不变。</li>
+</ul>
+<h2 id="4-2、常用命令"><a href="#4-2、常用命令" class="headerlink" title="4.2、常用命令"></a>4.2、常用命令</h2><ul>
+<li><code>sadd &lt;key&gt; &lt;value1&gt; &lt;value2&gt; ...</code>：将一个或多个元素加入到集合 key 中，已经存在的元素将被忽略。</li>
+<li><code>smembers &lt;key&gt;</code>：取出该集合的所有值。</li>
+<li><code>sismember &lt;key&gt; &lt;value&gt;</code>：判断集合key是否为含有该value值，有为1，没有为0</li>
+<li><code>scard&lt;key&gt;</code>：返回该集合的元素个数。</li>
+<li><code>srem &lt;key&gt; &lt;value1&gt; &lt;value2&gt; ...</code>：删除集合中的某个元素。</li>
+<li><code>spop &lt;key&gt;</code>：随机从该集合中吐出（删除）一个值，删完了，key就不存在了。</li>
+<li><code>srandmember &lt;key&gt; &lt;n&gt;</code>：随机从该集合中取出n个值。不会从集合中删除。</li>
+<li><code>smove &lt;key1&gt; &lt;key2&gt; &lt;value&gt;</code>：把k1集合中一个value值移动到另一个k2集合</li>
+<li><code>sinter &lt;key1&gt; &lt;key2&gt;</code>：返回两个集合的<strong>交集</strong>元素。</li>
+<li><code>sunion &lt;key1&gt; &lt;key2&gt;</code>：返回两个集合的<strong>并集</strong>元素。</li>
+<li><code>sdiff &lt;key1&gt; &lt;key2&gt;</code>：返回两个集合的<strong>差集</strong>元素(包含key1中的元素，不包含key2中的)</li>
+</ul>
+<h2 id="4-3、数据结构"><a href="#4-3、数据结构" class="headerlink" title="4.3、数据结构"></a>4.3、数据结构</h2><ul>
+<li>Set数据结构是dict字典，字典是用哈希表实现的。</li>
+<li>Java中HashSet的内部实现使用的是HashMap，只不过所有的value都指向同一个对象。Redis的set结构也是一样，它的内部也使用hash结构，所有的value都指向同一个内部值。</li>
+</ul>
+<h1 id="5、哈希（Hash）"><a href="#5、哈希（Hash）" class="headerlink" title="5、哈希（Hash）"></a>5、哈希（Hash）</h1><h2 id="5-1、简介"><a href="#5-1、简介" class="headerlink" title="5.1、简介"></a>5.1、简介</h2><ul>
+<li>Redis hash 是一个键值对集合。</li>
+<li>Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象。</li>
+<li>类似Java里面的Map&lt;String,Object&gt;</li>
+</ul>
+<h2 id="5-2、常用命令"><a href="#5-2、常用命令" class="headerlink" title="5.2、常用命令"></a>5.2、常用命令</h2><ul>
+<li><code>hset &lt;key&gt; &lt;field&gt; &lt;value&gt;</code>：给key集合中的 field键赋值value</li>
+<li><code>hget &lt;key&gt; &lt;field&gt;</code>：从key集合field取出 value </li>
+<li><code>hmset &lt;key&gt; &lt;field1&gt; &lt;value1&gt; &lt;field2&gt; &lt;value2&gt; ...</code>：批量设置hash的值。</li>
+<li><code>hexists &lt;key&gt; &lt;field&gt;</code>：查看哈希表 key 中，给定域 field 是否存在。 </li>
+<li><code>hkeys &lt;key&gt;</code>：列出该hash集合的所有field</li>
+<li><code>hvals &lt;key&gt;</code>：列出该hash集合的所有value</li>
+<li><code>hincrby &lt;key&gt; &lt;field&gt; &lt;increment&gt;</code>：为哈希表 key 中的域 field 的值加上增量increment。</li>
+<li><code>hsetnx &lt;key&gt; &lt;field&gt; &lt;value&gt;</code>：将哈希表 key 中的域 field 的值设置为 value ，当且仅当域 field 不存在 。</li>
+</ul>
+<h2 id="5-3、数据结构"><a href="#5-3、数据结构" class="headerlink" title="5.3、数据结构"></a>5.3、数据结构</h2><ul>
+<li>Hash类型对应的数据结构是两种：ziplist（压缩列表），hashtable（哈希表）。当field-value长度较短且个数较少时，使用ziplist，否则使用hashtable。</li>
+</ul>
+<h1 id="6、有序集合（Zset）"><a href="#6、有序集合（Zset）" class="headerlink" title="6、有序集合（Zset）"></a>6、有序集合（Zset）</h1><h2 id="6-1、简介"><a href="#6-1、简介" class="headerlink" title="6.1、简介"></a>6.1、简介</h2><ul>
+<li>Redis有序集合zset与普通集合set非常相似，是一个<strong>没有重复元素</strong>的字符串集合。</li>
+<li>不同之处是有序集合的每个成员都关联了一个<strong>评分（score）</strong>,这个评分（score）被用来按照从最低分到最高分的方式排序集合中的成员。<strong>集合的成员是唯一的，但是评分可以是重复的</strong>。</li>
+<li>因为元素是有序的, 所以你也可以很快的根据评分（score）或者次序（position）来获取一个范围的元素。</li>
+<li>访问有序集合的中间元素也是非常快的,因此你能够使用有序集合作为一个没有重复成员的智能列表。</li>
+</ul>
+<h2 id="6-2、常用命令"><a href="#6-2、常用命令" class="headerlink" title="6.2、常用命令"></a>6.2、常用命令</h2><ul>
+<li><code>zadd &lt;key&gt; &lt;score1&gt; &lt;value1&gt; &lt;score2&gt; &lt;value2&gt;…</code>：将一个或多个元素及其score值加入到有序集合key当中。</li>
+<li><code>zrange &lt;key&gt; &lt;start&gt; &lt;stop&gt; [withscores]</code> ：返回有序集 key 中，下标在start到stop之间的元素（带withscores，可以让分数一起和值返回到结果集）</li>
+<li><code>zrangebyscore &lt;key&gt; &lt;min&gt; &lt;max&gt; [withscores]</code>：返回有序集 key 中，所有score值介于min和max之间(包括等于min或max)的成员。有序集成员按score值递增(从小到大)次序排列。</li>
+<li><code>zrevrangebyscore &lt;key&gt; &lt;max&gt; &lt;min&gt; [withscores]</code>：同上，改为从大到小排列。 </li>
+<li><code>zincrby &lt;key&gt; &lt;increment&gt; &lt;value&gt;</code>：为元素的score加上增量increment</li>
+<li><code>zrem &lt;key&gt; &lt;value&gt;</code>：删除该集合下，指定值的元素。</li>
+<li><code>zcount &lt;key&gt; &lt;min&gt; &lt;max&gt;</code>：统计该集合，分数区间内的元素个数。</li>
+<li><code>zrank &lt;key&gt; &lt;value&gt;</code>：返回该值在集合中的排名，从0开始。</li>
+</ul>
+<h2 id="6-3、数据结构"><a href="#6-3、数据结构" class="headerlink" title="6.3、数据结构"></a>6.3、数据结构</h2><ul>
+<li><p>SortedSet(zset)是Redis提供的一个非常特别的数据结构，一方面它等价于Java的数据结构Map&lt;String, Double&gt;，可以给每一个元素value赋予一个权重score，另一方面它又类似于TreeSet，内部的元素会按照权重score进行排序，可以得到每个元素的名次，还可以通过score的范围来获取元素的列表。</p>
+</li>
+<li><p>zset底层使用了两个数据结构</p>
+<ol>
+<li>hash，hash的作用就是关联元素value和权重score，保障元素value的唯一性，可以通过元素value找到相应的score值。</li>
+<li>跳跃表，跳跃表的目的在于给元素value排序，根据score的范围获取元素列表。</li>
+</ol>
+</li>
+</ul>
+<h1 id="7、配置文件介绍"><a href="#7、配置文件介绍" class="headerlink" title="7、配置文件介绍"></a>7、配置文件介绍</h1><p>Redis配置文件在redis目录下的redis.conf。</p>
+<h2 id="①-Units单位"><a href="#①-Units单位" class="headerlink" title="① Units单位"></a>① Units单位</h2><p>配置大小单位,开头定义了一些基本的度量单位，只支持bytes，不支持bit。大小写不敏感</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Note on units: when memory size is needed, it is possible to specify</span><br><span class="line"># it in the usual form of 1k 5GB 4M and so forth:</span><br><span class="line">#</span><br><span class="line"># 1k =&gt; 1000 bytes</span><br><span class="line"># 1kb =&gt; 1024 bytes</span><br><span class="line"># 1m =&gt; 1000000 bytes</span><br><span class="line"># 1mb =&gt; 1024*1024 bytes</span><br><span class="line"># 1g =&gt; 1000000000 bytes</span><br><span class="line"># 1gb =&gt; 1024*1024*1024 bytes</span><br><span class="line">#</span><br><span class="line"># units are case insensitive so 1GB 1Gb 1gB are all the same.</span><br></pre></td></tr></table></figure>
+
+<h2 id="②-INCLUDES包含"><a href="#②-INCLUDES包含" class="headerlink" title="② INCLUDES包含"></a>② INCLUDES包含</h2><p>类似jsp中的include，多实例的情况可以把公用的配置文件提取出来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">################################## INCLUDES ###################################</span><br><span class="line"></span><br><span class="line"># Include one or more other config files here.  This is useful if you</span><br><span class="line"># have a standard template that goes to all Redis servers but also need</span><br><span class="line"># to customize a few per-server settings.  Include files can include</span><br><span class="line"># other files, so use this wisely.</span><br><span class="line">#</span><br><span class="line"># Notice option &quot;include&quot; won&#x27;t be rewritten by command &quot;CONFIG REWRITE&quot;</span><br><span class="line"># from admin or Redis Sentinel. Since Redis always uses the last processed</span><br><span class="line"># line as value of a configuration directive, you&#x27;d better put includes</span><br><span class="line"># at the beginning of this file to avoid overwriting config change at runtime.</span><br><span class="line">#</span><br><span class="line"># If instead you are interested in using includes to override configuration</span><br><span class="line"># options, it is better to use include as the last line.</span><br><span class="line">#</span><br><span class="line"># include .\path\to\local.conf</span><br><span class="line"># include c:\path\to\other.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="③-网络相关配置"><a href="#③-网络相关配置" class="headerlink" title="③ 网络相关配置"></a>③ 网络相关配置</h2><p><strong>bind：默认情况bind&#x3D;127.0.0.1只能接受本机的访问请求。</strong></p>
+<p>不写的情况下，无限制接受任何ip地址的访问</p>
+<p>生产环境肯定要写你应用服务器的地址；服务器是需要远程访问的，所以需要将其注释掉</p>
+<p>如果开启了protected-mode，那么在没有设定bind ip且没有设密码的情况下，Redis只允许接受本机的响应</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># By default, if no &quot;bind&quot; configuration directive is specified, Redis listens</span><br><span class="line"># for connections from all the network interfaces available on the server.</span><br><span class="line"># It is possible to listen to just one or multiple selected interfaces using</span><br><span class="line"># the &quot;bind&quot; configuration directive, followed by one or more IP addresses.</span><br><span class="line">#</span><br><span class="line"># Examples:</span><br><span class="line">#</span><br><span class="line"># bind 192.168.1.100 10.0.0.1</span><br><span class="line"># bind 127.0.0.1 ::1</span><br><span class="line">#</span><br><span class="line"># ~~~ WARNING ~~~ If the computer running Redis is directly exposed to the</span><br><span class="line"># internet, binding to all the interfaces is dangerous and will expose the</span><br><span class="line"># instance to everybody on the internet. So by default we uncomment the</span><br><span class="line"># following bind directive, that will force Redis to listen only into</span><br><span class="line"># the IPv4 loopback interface address (this means Redis will be able to</span><br><span class="line"># accept connections only from clients running into the same computer it</span><br><span class="line"># is running).</span><br><span class="line">#</span><br><span class="line"># IF YOU ARE SURE YOU WANT YOUR INSTANCE TO LISTEN TO ALL THE INTERFACES</span><br><span class="line"># JUST COMMENT THE FOLLOWING LINE.</span><br><span class="line"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">bind 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p><strong>protected-mode：将本机访问保护模式设置，默认yes</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># Protected mode is a layer of security protection, in order to avoid that</span><br><span class="line"># Redis instances left open on the internet are accessed and exploited.</span><br><span class="line">#</span><br><span class="line"># When protected mode is on and if:</span><br><span class="line">#</span><br><span class="line"># 1) The server is not binding explicitly to a set of addresses using the</span><br><span class="line">#    &quot;bind&quot; directive.</span><br><span class="line"># 2) No password is configured.</span><br><span class="line">#</span><br><span class="line"># The server only accepts connections from clients connecting from the</span><br><span class="line"># IPv4 and IPv6 loopback addresses 127.0.0.1 and ::1, and from Unix domain</span><br><span class="line"># sockets.</span><br><span class="line">#</span><br><span class="line"># By default protected mode is enabled. You should disable it only if</span><br><span class="line"># you are sure you want clients from other hosts to connect to Redis</span><br><span class="line"># even if no authentication is configured, nor a specific set of interfaces</span><br><span class="line"># are explicitly listed using the &quot;bind&quot; directive.</span><br><span class="line">protected-mode yes</span><br></pre></td></tr></table></figure>
+
+<p><strong>port：端口号，默认6379</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Accept connections on the specified port, default is 6379 (IANA #815344).</span><br><span class="line"># If port 0 is specified Redis will not listen on a TCP socket.</span><br><span class="line">port 6379</span><br></pre></td></tr></table></figure>
+
+<p><strong>tcp-backlog：是一个连接队列，默认值511</strong></p>
+<p>设置tcp的backlog，backlog其实是一个连接队列，backlog队列总和&#x3D;未完成三次握手队列 + 已经完成三次握手队列。</p>
+<p>在高并发环境下你需要一个高backlog值来避免慢客户端连接问题。</p>
+<p>注意Linux内核会将这个值减小到&#x2F;proc&#x2F;sys&#x2F;net&#x2F;core&#x2F;somaxconn的值（128），所以需要确认增大&#x2F;proc&#x2F;sys&#x2F;net&#x2F;core&#x2F;somaxconn和&#x2F;proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;tcp_max_syn_backlog（128）两个值来达到想要的效果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># TCP listen() backlog.</span><br><span class="line">#</span><br><span class="line"># In high requests-per-second environments you need an high backlog in order</span><br><span class="line"># to avoid slow clients connections issues. Note that the Linux kernel</span><br><span class="line"># will silently truncate it to the value of /proc/sys/net/core/somaxconn so</span><br><span class="line"># make sure to raise both the value of somaxconn and tcp_max_syn_backlog</span><br><span class="line"># in order to get the desired effect.</span><br><span class="line">tcp-backlog 511</span><br></pre></td></tr></table></figure>
+
+<p><strong>timeout：一个空闲的客户端维持多少秒会关闭，0表示关闭该功能。即永不关闭。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Unix socket.</span><br><span class="line">#</span><br><span class="line"># Specify the path for the Unix socket that will be used to listen for</span><br><span class="line"># incoming connections. There is no default, so Redis will not listen</span><br><span class="line"># on a unix socket when not specified.</span><br><span class="line">#</span><br><span class="line"># unixsocket /tmp/redis.sock</span><br><span class="line"># unixsocketperm 700</span><br><span class="line"></span><br><span class="line"># Close the connection after a client is idle for N seconds (0 to disable)</span><br><span class="line">timeout 0</span><br></pre></td></tr></table></figure>
+
+<p><strong>tcp-keepalive：对访问客户端的一种心跳检测，每个n秒检测一次。单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60</strong> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># TCP keepalive.</span><br><span class="line">#</span><br><span class="line"># If non-zero, use SO_KEEPALIVE to send TCP ACKs to clients in absence</span><br><span class="line"># of communication. This is useful for two reasons:</span><br><span class="line">#</span><br><span class="line"># 1) Detect dead peers.</span><br><span class="line"># 2) Take the connection alive from the point of view of network</span><br><span class="line">#    equipment in the middle.</span><br><span class="line">#</span><br><span class="line"># On Linux, the specified value (in seconds) is the period used to send ACKs.</span><br><span class="line"># Note that to close the connection the double of the time is needed.</span><br><span class="line"># On other kernels the period depends on the kernel configuration.</span><br><span class="line">#</span><br><span class="line"># A reasonable value for this option is 300 seconds, which is the new</span><br><span class="line"># Redis default starting with Redis 3.2.1.</span><br><span class="line">tcp-keepalive 300</span><br></pre></td></tr></table></figure>
+
+<h2 id="④-GENERAL通用"><a href="#④-GENERAL通用" class="headerlink" title="④ GENERAL通用"></a>④ GENERAL通用</h2><p><strong>daemonize：是否为后台进程，设置为yes，守护进程，后台启动</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># By default Redis does not run as a daemon. Use &#x27;yes&#x27; if you need it.</span><br><span class="line"># Note that Redis will write a pid file in /var/run/redis.pid when daemonized.</span><br><span class="line">daemonize yes</span><br></pre></td></tr></table></figure>
+
+<p><strong>pidfile：存放pid文件的位置，每个实例会产生一个不同的pid文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># If a pid file is specified, Redis writes it where specified at startup</span><br><span class="line"># and removes it at exit.</span><br><span class="line">#</span><br><span class="line"># When the server runs non daemonized, no pid file is created if none is</span><br><span class="line"># specified in the configuration. When the server is daemonized, the pid file</span><br><span class="line"># is used even if not specified, defaulting to &quot;/var/run/redis.pid&quot;.</span><br><span class="line">#</span><br><span class="line"># Creating a pid file is best effort: if Redis is not able to create it</span><br><span class="line"># nothing bad happens, the server will start and run normally.</span><br><span class="line">pidfile /var/run/redis_6379.pid</span><br></pre></td></tr></table></figure>
+
+<p><strong>loglevel：指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为notice</strong></p>
+<p>四个级别根据使用阶段来选择，生产环境选择notice 或者warning</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Specify the server verbosity level.</span><br><span class="line"># This can be one of:</span><br><span class="line"># debug (a lot of information, useful for development/testing)</span><br><span class="line"># verbose (many rarely useful info, but not a mess like the debug level)</span><br><span class="line"># notice (moderately verbose, what you want in production probably)</span><br><span class="line"># warning (only very important / critical messages are logged)</span><br><span class="line">loglevel notice</span><br></pre></td></tr></table></figure>
+
+<p><strong>logfile：日志文件名称</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Specify the log file name. Also &#x27;stdout&#x27; can be used to force</span><br><span class="line"># Redis to log on the standard output.</span><br><span class="line">logfile &quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>databases：设定库的数量 默认16，默认数据库为0，可以使用<code>SELECT &lt;dbid&gt;</code>命令在连接上指定数据库id</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Set the number of databases. The default database is DB 0, you can select</span><br><span class="line"># a different one on a per-connection basis using SELECT &lt;dbid&gt; where</span><br><span class="line"># dbid is a number between 0 and &#x27;databases&#x27;-1</span><br><span class="line">databases 16</span><br></pre></td></tr></table></figure>
+
+<h2 id="⑤-SECURITY安全"><a href="#⑤-SECURITY安全" class="headerlink" title="⑤ SECURITY安全"></a>⑤ SECURITY安全</h2><p><strong>requirepass：访问密码的查看、设置和取消。在命令中设置密码，只是临时的。重启redis服务器，密码就还原了。永久设置，需要再配置文件中进行设置。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># Require clients to issue AUTH &lt;PASSWORD&gt; before processing any other</span><br><span class="line"># commands.  This might be useful in environments in which you do not trust</span><br><span class="line"># others with access to the host running redis-server.</span><br><span class="line">#</span><br><span class="line"># This should stay commented out for backward compatibility and because most</span><br><span class="line"># people do not need auth (e.g. they run their own servers).</span><br><span class="line">#</span><br><span class="line"># Warning: since Redis is pretty fast an outside user can try up to</span><br><span class="line"># 150k passwords per second against a good box. This means that you should</span><br><span class="line"># use a very strong password otherwise it will be very easy to break.</span><br><span class="line">#</span><br><span class="line"># requirepass foobared</span><br></pre></td></tr></table></figure>
+
+<h2 id="⑥-LIMITS限制"><a href="#⑥-LIMITS限制" class="headerlink" title="⑥ LIMITS限制"></a>⑥ LIMITS限制</h2><p><strong>maxclients：设置redis同时可以与多少个客户端进行连接。默认情况下为10000个客户端。</strong></p>
+<p>如果达到了此限制，redis则会拒绝新的连接请求，并且向这些连接请求方发出“max number of clients reached”以作回应。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Set the max number of connected clients at the same time. By default</span><br><span class="line"># this limit is set to 10000 clients, however if the Redis server is not</span><br><span class="line"># able to configure the process file limit to allow for the specified limit</span><br><span class="line"># the max number of allowed clients is set to the current file limit</span><br><span class="line"># minus 32 (as Redis reserves a few file descriptors for internal uses).</span><br><span class="line">#</span><br><span class="line"># Once the limit is reached Redis will close all the new connections sending</span><br><span class="line"># an error &#x27;max number of clients reached&#x27;.</span><br><span class="line">#</span><br><span class="line"># maxclients 10000</span><br></pre></td></tr></table></figure>
+
+<p><strong>maxmemory</strong>：建议<strong>必须设置</strong>，否则，将内存占满，造成服务器宕机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># NOTE: since Redis uses the system paging file to allocate the heap memory,</span><br><span class="line"># the Working Set memory usage showed by the Windows Task Manager or by other</span><br><span class="line"># tools such as ProcessExplorer will not always be accurate. For example, right</span><br><span class="line"># after a background save of the RDB or the AOF files, the working set value</span><br><span class="line"># may drop significantly. In order to check the correct amount of memory used</span><br><span class="line"># by the redis-server to store the data, use the INFO client command. The INFO</span><br><span class="line"># command shows only the memory used to store the redis data, not the extra</span><br><span class="line"># memory used by the Windows process for its own requirements. Th3 extra amount</span><br><span class="line"># of memory not reported by the INFO command can be calculated subtracting the</span><br><span class="line"># Peak Working Set reported by the Windows Task Manager and the used_memory_peak</span><br><span class="line"># reported by the INFO command.</span><br><span class="line">#</span><br><span class="line"># maxmemory &lt;bytes&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.1.1.</strong>  <strong>maxmemory-policy</strong></p>
+<ul>
+<li>volatile-lru：使用LRU算法移除key，只对设置了过期时间的键；（最近最少使用）</li>
+<li>allkeys-lru：在所有集合key中，使用LRU算法移除key</li>
+<li>volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键</li>
+<li>allkeys-random：在所有集合key中，移除随机的key</li>
+<li>volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key</li>
+<li>noeviction：不进行移除。针对写操作，只是返回错误信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># Both LRU, LFU and volatile-ttl are implemented using approximated</span><br><span class="line"># randomized algorithms.</span><br><span class="line">#</span><br><span class="line"># Note: with any of the above policies, Redis will return an error on write</span><br><span class="line">#       operations, when there are no suitable keys for eviction.</span><br><span class="line">#</span><br><span class="line">#       At the date of writing these commands are: set setnx setex append</span><br><span class="line">#       incr decr rpush lpush rpushx lpushx linsert lset rpoplpush sadd</span><br><span class="line">#       sinter sinterstore sunion sunionstore sdiff sdiffstore zadd zincrby</span><br><span class="line">#       zunionstore zinterstore hset hsetnx hmset hincrby incrby decrby</span><br><span class="line">#       getset mset msetnx exec sort</span><br><span class="line">#</span><br><span class="line"># The default is:</span><br><span class="line">#</span><br><span class="line"># maxmemory-policy noeviction</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/head.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/head.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">笙沉</div><div class="post-copyright__author_desc">欢迎来看我的博客鸭~</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://dyzhome.top/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://dyzhome.top/2022/08/11/Redis常用命令/')">Redis常用命令</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://dyzhome.top/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=Redis常用命令&amp;url=https://dyzhome.top/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/&amp;pic=/img/default_cover.jpg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="rm.copyPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://dyzhome.top" target="_blank">笙沉のBlog</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>学习笔记<span class="tagsPageCount">13</span></a><a class="post-meta__box__tags" href="/tags/Redis/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Redis<span class="tagsPageCount">1</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/img/default_cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/03/Spring%E6%A1%86%E6%9E%B6-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring框架-声明式事务</div></div></a></div><div class="next-post pull-right"><a href="/2022/10/30/JVM/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">深入了解JVM</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>猜你喜欢</span></div><div class="relatedPosts-list"><div><a href="/2021/07/16/IO%E6%B5%81%E8%AF%A6%E8%A7%A3/" title="IO流详解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2021-07-16</div><div class="title">IO流详解</div></div></a></div><div><a href="/2021/08/16/Java%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="Java网络编程"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2021-08-16</div><div class="title">Java网络编程</div></div></a></div><div><a href="/2022/10/30/JVM/" title="深入了解JVM"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2022-10-30</div><div class="title">深入了解JVM</div></div></a></div><div><a href="/2021/08/11/Java%E5%8F%8D%E5%B0%84/" title="Java反射"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2021-08-11</div><div class="title">Java反射</div></div></a></div><div><a href="/2021/07/14/Java%E6%9E%9A%E4%B8%BE%E7%B1%BB/" title="Java枚举类"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2021-07-14</div><div class="title">Java枚举类</div></div></a></div><div><a href="/2021/07/22/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="Java多线程"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2021-07-22</div><div class="title">Java多线程</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://bu.dusays.com/2023/08/24/64e6ce9c507bb.png" ait="status"/></div></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">本站主要用于记录自己的<b style="color:#fff">学习笔记</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">笙沉</h1><div class="author-info__desc">欢迎来看我的博客鸭~</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/dyz0420" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81Redis%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">1、Redis基础命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1%E3%80%81%E5%AF%B9key%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">1.1、对key操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2%E3%80%81%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4"><span class="toc-number">1.2.</span> <span class="toc-text">1.2、其他命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%88String%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">2、字符串（String）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">2.1、简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">2.2、常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.</span> <span class="toc-text">2.3、数据结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81%E5%88%97%E8%A1%A8%EF%BC%88List%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">3、列表（List）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">3.1.</span> <span class="toc-text">3.1、简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">3.2、常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">3.3.</span> <span class="toc-text">3.3、数据结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81%E9%9B%86%E5%90%88%EF%BC%88Set%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">4、集合（Set）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">4.1.</span> <span class="toc-text">4.1、简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">4.2.</span> <span class="toc-text">4.2、常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">4.3.</span> <span class="toc-text">4.3、数据结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81%E5%93%88%E5%B8%8C%EF%BC%88Hash%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">5、哈希（Hash）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">5.1.</span> <span class="toc-text">5.1、简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.2.</span> <span class="toc-text">5.2、常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">5.3.</span> <span class="toc-text">5.3、数据结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6%E3%80%81%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%EF%BC%88Zset%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">6、有序集合（Zset）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">6.1.</span> <span class="toc-text">6.1、简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">6.2.</span> <span class="toc-text">6.2、常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">6.3.</span> <span class="toc-text">6.3、数据结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7%E3%80%81%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="toc-number">7.</span> <span class="toc-text">7、配置文件介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A0-Units%E5%8D%95%E4%BD%8D"><span class="toc-number">7.1.</span> <span class="toc-text">① Units单位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A1-INCLUDES%E5%8C%85%E5%90%AB"><span class="toc-number">7.2.</span> <span class="toc-text">② INCLUDES包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A2-%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-number">7.3.</span> <span class="toc-text">③ 网络相关配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A3-GENERAL%E9%80%9A%E7%94%A8"><span class="toc-number">7.4.</span> <span class="toc-text">④ GENERAL通用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A4-SECURITY%E5%AE%89%E5%85%A8"><span class="toc-number">7.5.</span> <span class="toc-text">⑤ SECURITY安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%91%A5-LIMITS%E9%99%90%E5%88%B6"><span class="toc-number">7.6.</span> <span class="toc-text">⑥ LIMITS限制</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/03/04/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BASpringBoot%E9%A1%B9%E7%9B%AE/" title="快速初始化搭建SpringBoot项目"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速初始化搭建SpringBoot项目"/></a><div class="content"><a class="title" href="/2023/03/04/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BASpringBoot%E9%A1%B9%E7%9B%AE/" title="快速初始化搭建SpringBoot项目">快速初始化搭建SpringBoot项目</a><time datetime="2023-03-04T12:58:29.000Z" title="发表于 2023-03-04 20:58:29">2023-03-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/30/JVM/" title="深入了解JVM"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入了解JVM"/></a><div class="content"><a class="title" href="/2022/10/30/JVM/" title="深入了解JVM">深入了解JVM</a><time datetime="2022-10-30T01:51:15.000Z" title="发表于 2022-10-30 09:51:15">2022-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="Redis常用命令"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis常用命令"/></a><div class="content"><a class="title" href="/2022/08/11/Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="Redis常用命令">Redis常用命令</a><time datetime="2022-08-11T04:57:12.000Z" title="发表于 2022-08-11 12:57:12">2022-08-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/03/Spring%E6%A1%86%E6%9E%B6-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="Spring框架-声明式事务"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring框架-声明式事务"/></a><div class="content"><a class="title" href="/2022/03/03/Spring%E6%A1%86%E6%9E%B6-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="Spring框架-声明式事务">Spring框架-声明式事务</a><time datetime="2022-03-03T06:53:12.000Z" title="发表于 2022-03-03 14:53:12">2022-03-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/24/Spring%E6%A1%86%E6%9E%B6-AOP/" title="Spring框架-AOP"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Spring框架-AOP"/></a><div class="content"><a class="title" href="/2022/02/24/Spring%E6%A1%86%E6%9E%B6-AOP/" title="Spring框架-AOP">Spring框架-AOP</a><time datetime="2022-02-24T06:10:55.000Z" title="发表于 2022-02-24 14:10:55">2022-02-24</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2020 - 2023 By <a class="footer-bar-link" href="/" title="笙沉" target="_blank">笙沉</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
+  fetch('https://v1.hitokoto.cn')
+    .then(response => response.json())
+    .then(data => {
+      if (true) {
+        const from = '出自 ' + data.from
+        const sub = []
+        sub.unshift(data.hitokoto, from)
+        window.typed = new Typed('#footer-type-tips', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('footer-type-tips').innerHTML = data.hitokoto
+      }
+    })
+}
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.cbd.int/typed.js@2.0.15/dist/typed.umd.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script></div></div><div class="footer-bar-right"><a class="footer-bar-link" href="https://dyzhome.top" title="博客">博客</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">6</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://dyzhome.top" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="http://139.224.229.183/" title="微视频"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="http://139.224.229.183/favicon.ico" alt="微视频"/><span class="back-menu-item-text">微视频</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/categories/"><span> 分类</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/archives/"><span> 归档</span></a></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/AOP/" style="font-size: 0.88rem;">AOP<sup>1</sup></a><a href="/tags/IOC/" style="font-size: 0.88rem;">IOC<sup>1</sup></a><a href="/tags/JVM/" style="font-size: 0.88rem;">JVM<sup>1</sup></a><a href="/tags/Java%E9%AB%98%E7%BA%A7/" style="font-size: 0.88rem;">Java高级<sup>7</sup></a><a href="/tags/Mybatis%E6%A1%86%E6%9E%B6/" style="font-size: 0.88rem;">Mybatis框架<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 0.88rem;">Redis<sup>1</sup></a><a href="/tags/Spring%E6%A1%86%E6%9E%B6/" style="font-size: 0.88rem;">Spring框架<sup>3</sup></a><a href="/tags/%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/" style="font-size: 0.88rem;">声明式事务<sup>1</sup></a><a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 0.88rem;">学习笔记<sup>13</sup></a><a href="/tags/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/" style="font-size: 0.88rem;">实用工具<sup>1</sup></a><a href="/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" style="font-size: 0.88rem;">排序算法<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="8152976493" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random"></meting-js></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>转为繁体</span></a></div></div><div id="rightmenu-mask"></div><div id="he-plugin-simple"></div><script>var WIDGET = {
+  "CONFIG": {
+    "modules": "0124",
+    "background": "2",
+    "tmpColor": "FFFFFF",
+    "tmpSize": "16",
+    "cityColor": "FFFFFF",
+    "citySize": "16",
+    "aqiColor": "E8D87B",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "0",
+    "language": "auto",
+    "borderRadius": "20",
+    "fixed": "true",
+    "vertical": "top",
+    "horizontal": "left",
+    "left": "20",
+    "top": "7.1",
+    "key": "df245676fb434a0691ead1c63341cd94"
+  }
+}
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.20/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.4/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("04/01/2021 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2020 By 安知鱼 V1.6.4",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#3b70fc",
+      "",
+      "color:#3b70fc",
+      "color:#3b70fc",
+      "",
+      "color:#3b70fc",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 笙沉 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><div class="js-pjax"><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "visitor@anheyu.com";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

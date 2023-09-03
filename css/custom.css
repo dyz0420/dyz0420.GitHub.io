@@ -1,0 +1,12 @@
+/* 欢迎信息 */
+#welcome-info {
+    background: linear-gradient(45deg, #b9f4f3, #e3fbf9);
+    border-radius: 10px;
+    padding: 20px 24px;
+}
+.welcome-card{
+    padding: 0 !important;
+}
+[data-theme="dark"] #welcome-info {
+    background: #212121;
+}
